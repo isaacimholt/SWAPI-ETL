@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from extract import extract
+from etl.extract import extract
 from settings import Settings
 
 logger = logging.getLogger(__name__)
