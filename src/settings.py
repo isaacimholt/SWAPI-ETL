@@ -7,3 +7,4 @@ class Settings(BaseSettings):
     api_max_page_results: int = 10
     max_simultaneous_requests: int = 10
     max_request_retries: int = 3
+    max_person_filter: int = 10
