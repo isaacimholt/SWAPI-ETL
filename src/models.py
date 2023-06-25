@@ -50,3 +50,34 @@ class PersonComparator:
     """Used for comparison in heap https://docs.python.org/3/library/heapq.html"""
     key: int
     person: Person = field(compare=False)  # compare=False to preserve heap insertion order
+
+
+class Species(BaseModel):
+    name: str
+    classification: str
+    designation: str
+    average_height: Decimal | None
+    skin_colors: list[Color]
+    hair_colors: list[Color]
+    eye_colors: list[Color]
+    average_lifespan: Decimal | None
+    homeworld: HttpUrl | None
+    language: str | None
+    people: list[HttpUrl]
+    films: list[HttpUrl]
+    created: datetime.datetime
+    edited: datetime.datetime
+    url: HttpUrl
+
+    # validators
+    _convert_nulls = validator("language", "homeworld", pre=True, allow_reuse=True)(convert_null)
+    _convert_decimals = validator("average_height", "average_lifespan", pre=True, allow_reuse=True)(convert_decimal)
+    _extract_colors = validator("hair_colors", "skin_colors", "eye_colors", pre=True, allow_reuse=True)(extract_colors)
+
+
+class CSVCOL(StrEnum):
+    """Columns for CSV export"""
+    NAME = auto()
+    SPECIES = auto()
+    HEIGHT = auto()
+    APPEARANCES = auto()
