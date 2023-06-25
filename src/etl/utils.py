@@ -7,7 +7,6 @@ from pydantic import ValidationError
 from tenacity import retry, retry_if_exception_type, wait_random_exponential, stop_after_attempt, before_sleep_log
 
 from _types import M
-from models import APIPersonPage
 from settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ def _init_get_entity(settings: Settings, entity_model: M) -> Callable[[aiohttp.C
         stop=stop_after_attempt(settings.max_request_retries),
         before_sleep=before_sleep_log(logger, logging.WARNING),  # log when we retry
     )
-    async def get_entity(client: aiohttp.ClientSession, url: str) -> APIPersonPage:
+    async def get_entity(client: aiohttp.ClientSession, url: str) -> M:
         """Gets an entity with some retry logic."""
         async with client.get(url) as resp:
             _json = await resp.json()
