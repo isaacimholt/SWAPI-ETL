@@ -52,7 +52,7 @@ class PersonComparator:
     person: APIPerson = field(compare=False)  # compare=False to preserve heap insertion order
 
 
-class Species(BaseModel):
+class APISpecies(BaseModel):
     name: str
     classification: str
     designation: str
