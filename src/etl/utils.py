@@ -2,6 +2,7 @@ import logging
 from typing import Callable, Awaitable
 
 import aiohttp
+from async_lru import alru_cache
 from pydantic import ValidationError
 from tenacity import retry, retry_if_exception_type, wait_random_exponential, stop_after_attempt, before_sleep_log
 
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 def _init_get_entity(settings: Settings, entity_model: M) -> Callable[[aiohttp.ClientSession, str], Awaitable[M]]:
     """Wrapper function to init getter function with retry settings for getting entities."""
 
+    @alru_cache()
     @retry(
         retry=retry_if_exception_type(aiohttp.ClientError),
         wait=wait_random_exponential(multiplier=1, max=3),
