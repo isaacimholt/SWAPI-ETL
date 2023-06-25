@@ -11,6 +11,7 @@ setup(
     description="Star Wars API ETL",
     install_requires=[
         "aiohttp[speedups]",
+        "async_lru",
         "pandas",
         "pydantic",
         "tenacity",
