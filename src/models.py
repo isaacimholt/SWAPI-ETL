@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any, NewType
 
@@ -62,3 +63,10 @@ class PersonPage(BaseModel):
     next: HttpUrl | None
     previous: HttpUrl | None
     results: list[Person]
+
+
+@dataclass(order=True)
+class PersonComparator:
+    """Used for comparison in heap https://docs.python.org/3/library/heapq.html"""
+    key: int
+    person: Person = field(compare=False)  # compare=False to preserve heap insertion order
