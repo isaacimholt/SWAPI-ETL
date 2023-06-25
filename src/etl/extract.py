@@ -8,14 +8,14 @@ import aiohttp
 from tqdm import tqdm
 
 from etl.utils import _init_get_entity
-from models import Person, PersonPage
+from models import APIPerson, APIPersonPage
 from settings import Settings
 
 logger = logging.getLogger(__name__)
 
 
-async def extract(settings: Settings) -> AsyncIterator[Person]:
-    get_person_page = _init_get_entity(settings=settings, entity_model=PersonPage)
+async def extract(settings: Settings) -> AsyncIterator[APIPerson]:
+    get_person_page = _init_get_entity(settings=settings, entity_model=APIPersonPage)
     connector = aiohttp.TCPConnector(limit=settings.max_simultaneous_requests)
     client_session = aiohttp.ClientSession(connector=connector, raise_for_status=True)
     async with client_session as client:

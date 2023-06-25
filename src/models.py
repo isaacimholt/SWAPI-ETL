@@ -11,7 +11,7 @@ from _types import Color
 from validators import convert_null, convert_decimal, extract_colors
 
 
-class Person(BaseModel):
+class APIPerson(BaseModel):
     """Represents a Person object from api/people/"""
     name: str
     height: Decimal | None
@@ -38,18 +38,18 @@ class Person(BaseModel):
     _extract_colors = validator("hair_colors", "skin_colors", "eye_colors", pre=True, allow_reuse=True)(extract_colors)
 
 
-class PersonPage(BaseModel):
+class APIPersonPage(BaseModel):
     count: int
     next: HttpUrl | None
     previous: HttpUrl | None
-    results: list[Person]
+    results: list[APIPerson]
 
 
 @dataclass(order=True)
 class PersonComparator:
     """Used for comparison in heap https://docs.python.org/3/library/heapq.html"""
     key: int
-    person: Person = field(compare=False)  # compare=False to preserve heap insertion order
+    person: APIPerson = field(compare=False)  # compare=False to preserve heap insertion order
 
 
 class Species(BaseModel):
