@@ -3,13 +3,12 @@ from __future__ import annotations
 import datetime
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Any, NewType
+from enum import StrEnum, auto
 
 from pydantic import BaseModel, validator, Field, HttpUrl
 
-from utils import is_null
-
-Color = NewType("Color", str)
+from _types import Color
+from validators import convert_null, convert_decimal, extract_colors
 
 
 class Person(BaseModel):
@@ -31,31 +30,12 @@ class Person(BaseModel):
     edited: datetime.datetime
     url: HttpUrl
 
-    @validator("height", "mass", "birth_year", "gender", "homeworld", pre=True)
-    def convert_null(cls, v) -> Any | None:
-        """Convert 'nullable' fields from string to None."""
-        if isinstance(v, str) and is_null(v):
-            return None
-        return v
-
-    @validator("height", "mass", pre=True)
-    def convert_decimal(cls, v) -> Any | Decimal | None:
-        """Convert 'nullable' fields from string to None."""
-        if isinstance(v, str):
-            if is_null(v):
-                return None
-            # remove thousands separator
-            return Decimal(v.replace(",", ""))
-        return v
-
-    @validator("hair_colors", "skin_colors", "eye_colors", pre=True)
-    def extract_colors(cls, v) -> Any | list[Color]:
-        """Extract list of colors for various fields."""
-        if isinstance(v, str):
-            if is_null(v):
-                return []
-            return [Color(c.strip().lower()) for c in v.split(",")]
-        return v
+    # validators
+    _convert_nulls = validator(
+        "height", "mass", "birth_year", "gender", "homeworld", pre=True, allow_reuse=True
+    )(convert_null)
+    _convert_decimals = validator("height", "mass", pre=True, allow_reuse=True)(convert_decimal)
+    _extract_colors = validator("hair_colors", "skin_colors", "eye_colors", pre=True, allow_reuse=True)(extract_colors)
 
 
 class PersonPage(BaseModel):
