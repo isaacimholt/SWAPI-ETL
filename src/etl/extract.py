@@ -56,6 +56,7 @@ def _init_get_person_page(settings: Settings) -> Callable[[aiohttp.ClientSession
             try:
                 return PersonPage(**_json)
             except (ValidationError, TypeError):
+                # we want to see the data that failed validation, but we also want to raise error
                 logger.error(f"\nCannot load json:\n{_json}")
                 raise
 
