@@ -4,16 +4,16 @@ from typing import AsyncIterator
 
 from pandas import DataFrame
 
-from models import APIPerson, PersonComparator, CSVCOL
+from models import PersonComparator, CSVCOL, Person
 from settings import Settings
 
 
-async def transform(people: AsyncIterator[APIPerson], settings: Settings):
+async def transform(people: AsyncIterator[Person], settings: Settings):
     people = await filter_and_sort(people=people, settings=settings)
     return people
 
 
-async def filter_and_sort(people: AsyncIterator[APIPerson], settings: Settings) -> list[APIPerson]:
+async def filter_and_sort(people: AsyncIterator[Person], settings: Settings) -> list[Person]:
     # 1. Handle "large" datasets with heap queue
     # 2. Ignore people that do not have a numeric height
     # 3. Configurable number of max people to consider
@@ -41,7 +41,7 @@ async def filter_and_sort(people: AsyncIterator[APIPerson], settings: Settings) 
             heapq.heappushpop(most_films_heap, person_with_inverse_key)
 
     # unwrap PersonComparator
-    most_films: list[APIPerson] = [comparator.person for comparator in most_films_heap]
+    most_films: list[Person] = [comparator.person for comparator in most_films_heap]
 
     return sorted(most_films, key=attrgetter("height"), reverse=True)
 

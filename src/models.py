@@ -4,6 +4,7 @@ import datetime
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import StrEnum, auto
+from typing import Self
 
 from pydantic import BaseModel, validator, Field, HttpUrl
 
@@ -45,13 +46,6 @@ class APIPersonPage(BaseModel):
     results: list[APIPerson]
 
 
-@dataclass(order=True)
-class PersonComparator:
-    """Used for comparison in heap https://docs.python.org/3/library/heapq.html"""
-    key: int
-    person: APIPerson = field(compare=False)  # compare=False to preserve heap insertion order
-
-
 class APISpecies(BaseModel):
     name: str
     classification: str
@@ -73,6 +67,35 @@ class APISpecies(BaseModel):
     _convert_nulls = validator("language", "homeworld", pre=True, allow_reuse=True)(convert_null)
     _convert_decimals = validator("average_height", "average_lifespan", pre=True, allow_reuse=True)(convert_decimal)
     _extract_colors = validator("hair_colors", "skin_colors", "eye_colors", pre=True, allow_reuse=True)(extract_colors)
+
+
+class Species(BaseModel):
+    """Species representation for internal business logic, only needed fields are added."""
+    name: str
+
+
+class Person(BaseModel):
+    """Person representation for internal business logic, only needed fields are added."""
+    name: str
+    height: Decimal | None
+    films: list[HttpUrl]
+    species: list[Species]
+
+    @classmethod
+    def from_api_person(cls, api_person: APIPerson, species: list[Species]) -> Self:
+        return cls(
+            name=api_person.name,
+            height=api_person.height,
+            films=api_person.films,
+            species=species,
+        )
+
+
+@dataclass(order=True)
+class PersonComparator:
+    """Used for comparison in heap https://docs.python.org/3/library/heapq.html"""
+    key: int
+    person: Person = field(compare=False)  # compare=False to preserve heap insertion order
 
 
 class CSVCOL(StrEnum):
