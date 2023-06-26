@@ -31,14 +31,14 @@ async def filter_and_sort(people: AsyncIterator[Person], settings: Settings) -> 
         if person.height is None:
             continue
 
-        # create a comparison wrapper with person & inverse key because we have a min heap
-        person_with_inverse_key = PersonComparator(key=-len(person.films), person=person)
+        # create a comparison wrapper with person & key
+        person_with_key = PersonComparator(key=len(person.films), person=person)
 
         # push heap & handle max number of items
         if len(most_films_heap) < settings.max_person_filter:
-            heapq.heappush(most_films_heap, person_with_inverse_key)
+            heapq.heappush(most_films_heap, person_with_key)
         else:
-            heapq.heappushpop(most_films_heap, person_with_inverse_key)
+            heapq.heappushpop(most_films_heap, person_with_key)
 
     # unwrap PersonComparator
     most_films: list[Person] = [comparator.person for comparator in most_films_heap]
