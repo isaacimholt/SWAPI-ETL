@@ -23,6 +23,7 @@ setup(
         "dev": [
             "pip-tools",
             "pytest",
+            "pytest-cov",
         ]
     },
     python_requires=">=3.11",
