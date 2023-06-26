@@ -16,8 +16,4 @@ async def etl(settings: Settings):
 
 if __name__ == "__main__":
     _settings = Settings()
-    asyncio.run(
-        etl(
-            settings=_settings,
-        )
-    )
+    asyncio.run(etl(settings=_settings))
