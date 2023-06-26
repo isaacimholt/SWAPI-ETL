@@ -2,15 +2,16 @@ import heapq
 from operator import attrgetter
 from typing import AsyncIterator
 
+import pandas as pd
 from pandas import DataFrame
 
 from models import PersonComparator, CSVCOL, Person
 from settings import Settings
 
 
-async def transform(people: AsyncIterator[Person], settings: Settings):
+async def transform(people: AsyncIterator[Person], settings: Settings) -> DataFrame:
     people = await filter_and_sort(people=people, settings=settings)
-    return people
+    return to_df(people)
 
 
 async def filter_and_sort(people: AsyncIterator[Person], settings: Settings) -> list[Person]:
@@ -47,4 +48,13 @@ async def filter_and_sort(people: AsyncIterator[Person], settings: Settings) -> 
 
 
 def to_df(people: list[Person]) -> DataFrame:
-    pass
+    data = [
+        {
+            CSVCOL.NAME:        p.name,
+            CSVCOL.SPECIES:     ", ".join(s.name for s in p.species),
+            CSVCOL.HEIGHT:      p.height,
+            CSVCOL.APPEARANCES: len(p.films),
+        }
+        for p in people
+    ]
+    return pd.DataFrame.from_records(data, index=CSVCOL.NAME)
