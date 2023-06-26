@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 async def etl(settings: Settings):
-    people = extract(settings=settings)
-    people = await transform(people=people, settings=settings)
-    print(people)
+    people_aiter = extract(settings=settings)
+    people_df = await transform(people=people_aiter, settings=settings)
+    print(people_df)
 
 
 if __name__ == "__main__":
