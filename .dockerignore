@@ -1,0 +1,15 @@
+# https://testdriven.io/blog/docker-best-practices/#use-a-dockerignore-file
+**/.git
+**/.gitignore
+**/.vscode
+**/coverage
+**/.env
+**/.aws
+**/.ssh
+Dockerfile
+README.md
+docker-compose.yml
+**/.DS_Store
+**/venv
+**/env
+.hypothesis
