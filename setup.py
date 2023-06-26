@@ -23,6 +23,7 @@ setup(
         "dev": [
             "pip-tools",
             "pytest",
+            "pytest-asyncio",
             "pytest-cov",
         ]
     },
