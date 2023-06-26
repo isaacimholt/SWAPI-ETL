@@ -25,12 +25,13 @@ def _init_get_entity(settings: Settings, entity_model: M) -> Callable[[aiohttp.C
     async def get_entity(client: aiohttp.ClientSession, url: str) -> M:
         """Gets an entity with some retry logic."""
         async with client.get(url) as resp:
+            logger.info(f"Getting: {url}")
             _json = await resp.json()
             try:
                 return entity_model(**_json)
             except (ValidationError, TypeError):
                 # we want to see the data that failed validation, but we also want to raise error
-                logger.error(f"\nCannot load json:\n{_json}")
+                logger.error(f"\nCannot load {entity_model} json:\n{_json}")
                 raise
 
     return get_entity

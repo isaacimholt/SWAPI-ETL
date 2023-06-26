@@ -7,6 +7,7 @@ from etl.transform import transform
 from settings import Settings
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 async def etl(settings: Settings):
