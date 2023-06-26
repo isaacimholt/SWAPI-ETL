@@ -9,8 +9,7 @@ generators.
 Data is first acquired through asyncio-based aiohttp with a configurable limit on max connections, then normalized &
 validated by way of the pydantic library. Additional data (such as species) is memoized using an asyncio-compatible LRU
 cache. We then process the data using a heap queue to avoid keeping unnecessary data in memory. Pandas is used to
-export the data to csv (possible improvement: if we don't need the csv file we should avoid writing to disk), and
-finally we send it to HTTPBin.
+export the data to csv string, and finally we send it to HTTPBin.
 
 Special care was made to treat this as a "production-grade" project, with all settings configurable from environment
 variables, retry logic using the tenacity library, and double layer dependency management (in setup.py and
