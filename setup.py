@@ -25,4 +25,5 @@ setup(
             "pytest",
         ]
     },
+    python_requires=">=3.11",
 )
