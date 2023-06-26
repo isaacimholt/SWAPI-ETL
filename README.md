@@ -24,6 +24,12 @@ This solution is (slightly) over-engineered with respect to the project requirem
 2. pip install -r requirements.txt
 3. python main.py (optionally set env vars for Settings)
 
+# Tests
+
+```bash
+pytest
+```
+
 # Dependency management
 
 _create a venv first_
