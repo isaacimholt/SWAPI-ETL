@@ -1,7 +1,7 @@
 """For use with Pydantic to normalize & validate data"""
 from __future__ import annotations
 
-from decimal import Decimal
+from decimal import Decimal, DecimalException
 from typing import Any
 
 from _types import Color
@@ -21,7 +21,10 @@ def convert_decimal(v) -> Any | Decimal | None:
         if is_null(v):
             return None
         # remove thousands separator
-        return Decimal(v.replace(",", ""))
+        try:
+            return Decimal(v.replace(",", ""))
+        except DecimalException:
+            return None
     return v
 
 
